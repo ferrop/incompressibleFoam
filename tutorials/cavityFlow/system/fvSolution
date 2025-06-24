@@ -1,0 +1,110 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2106                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solvers
+{
+    p
+    {
+ //       solver          GAMG;
+ //       smoother         DIC;
+        solver          PCG;
+        preconditioner  DIC;
+        tolerance       1e-10;
+        relTol          0.0;
+        minIter 1;
+    }
+
+    pFinal
+    {
+        $p;
+        relTol          0;
+    }
+
+    "U.*"
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-10;
+        relTol          0;
+        minIter 1;
+    }
+}
+
+PIMPLE
+{
+    //Choose to extrapolate fields from previous time iteration
+    //  usefull in PISO mode
+    //  use false if steadyState scheme
+    fieldsExtrapolation      false;
+
+    //Rhie & Chow mode : 
+    //  if true the interpolation is consistent (CMI)
+    //  if false the NCMI is used (be carefull of pressure checkerboarding)
+    //  Recommended value true
+    consistentRhieChow       true;
+
+    //Pressure formulation mode :
+    //  Choose to solve for the physical pressure (false)
+    //  or the corrected pressure (true). 
+    //  if true, checkerboarding will occur unless if consistentRhieChow true;
+    //  Recommended value false
+    pressureCorrectionForm   true;
+
+    //Standard P-U coupling
+    momentumPredictor        true;
+    nOuterCorrectors          1;
+    nCorrectors               5;
+    nNonOrthogonalCorrectors  0;
+    pRefCell                  0;
+    pRefValue                 0;
+
+    //If localEuler scheme is used
+    maxCo 10.0;
+    rDeltaTSmoothingCoeff 0.05;
+    rDeltaTDampingCoeff    0.5;
+    maxDeltaT 1;
+
+/*
+    residualControl
+    {
+        U
+        {
+                tolerance  1e-10;
+                relTol      0;
+        }
+        p
+        {
+                tolerance  1e-10;
+                relTol      0;
+        }
+     }
+*/
+}
+
+relaxationFactors
+{
+    fields
+    {
+        p         0.5;
+        pFinal    1.0;
+    }
+    equations
+    {
+        U         0.5;
+        UFinal    1.0;
+    }
+}
+// ************************************************************************* //

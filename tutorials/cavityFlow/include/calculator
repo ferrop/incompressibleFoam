@@ -1,0 +1,5 @@
+Re    1000;
+Ulid  1.0; // m/s
+L     1.0; //m
+
+nuv #calc " 1.0 * $Ulid * $L / $Re" ;

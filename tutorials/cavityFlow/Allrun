@@ -1,0 +1,14 @@
+#!/bin/sh
+cd "${0%/*}" || exit                                # Run from this directory
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # Tutorial run functions
+#------------------------------------------------------------------------------
+
+touch case.foam
+rm -rf 0
+cp -r 0.orig 0
+blockMesh
+decomposePar -force
+mpirun -np 4 incompressibleFoam -parallel
+reconstructPar -latestTime
+
+#------------------------------------------------------------------------------
