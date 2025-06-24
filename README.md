@@ -14,9 +14,9 @@ In the CMI we use the flux at face rather than an interpolation of the velocity 
 The solved pressure is the physical pressure (divided by the density)
 ### Corrected form
 The solved pressure is the corrected pressure $p_c$ such as :
-$$
+$
 p = p^0 + p_c
-$$
+$
 
 ## Installation
 
