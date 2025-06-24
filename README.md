@@ -83,24 +83,24 @@ The solved pressure is the physical pressure $p$ (divided by the density). The s
 PIMPLE
 {
    ...
-    consistentRhieChow       false;
+    pressureCorrectionForm    false;
    ...
 }
 ````
 ### Corrected form
 The solved pressure is the corrected pressure $p_c$ such as :
-$p = p^0 + p_c$ with $p^0$ the old-time or last iteration pressure (if steady scheme). With NCMI the corrected form will likely lead to strong checkerboard effect.
+$p = p^0 + p_c$ with $p^0$ the old-time or last iteration pressure (if steady scheme). With NCMI the corrected form will likely lead to strong checkerboard effects.
 ```cpp
 PIMPLE
 {
    ...
-    consistentRhieChow       true;
+    pressureCorrectionForm    true;
    ...
 }
 ````
 ## Field extrapolation
 This option allows to start the first temporal iteration with fields (flux, velocity and pressure) calculated using a 2nd order extrapolation. 
-This option is particulary interesting for PISO transient simulations.
+This option is particulary interesting for PISO transient simulations. The activation of extrapolation will likely constrains the maximal Courant number.
 
 $\boldsymbol{u}^{n+1}_P = \frac{d t}{d t_0}(\boldsymbol{u}^{n}_P-\boldsymbol{u}^{n-1}_P)+\boldsymbol{u}^{n}_P$
 
