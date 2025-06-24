@@ -1,3 +1,0 @@
-incompressibleFoam.C
-
-EXE = $(FOAM_APPBIN)/incompressibleFoam
