@@ -7,6 +7,11 @@ The solver features are :
 - Two forms of pressure (standard and corrected)
 - 2nd order field extrapolation
 - Correct handling of pressure relaxation
+
+# References
+P. Ferro, P. Landel, C. Landrodie, and M. Pescheux. incompressiblefoam: a new time consistent framework with bdf
+and dirk integration schemes. 2024. URL https://arxiv.org/abs/2411.08688.
+
 ## Available time schemes
 ### Transient schemes
  | Name | Description | Name | Description |
@@ -28,7 +33,7 @@ is obtained with ocCoeff = 1.
 ### Steady-state schemes
  | Name | Description |
  |----------------|-------------|
- | steadyState | steady scheme for SIMPLE mode calculation |
+ | steadyState | steady scheme for SIMPLE mode calculations |
  | localEuler | LTS schemes for pseudo-transient approach |
 
 For steadyState, the correct use in fvSolutions is to set nOuterCorrectors and nCorrectors to 1 and to control relaxation with the final field.
@@ -97,7 +102,7 @@ PIMPLE
 This option allows to start the first temporal iteration with fields (flux, velocity and pressure) calculated using a 2nd order extrapolation. 
 This option is particulary interesting for PISO transient simulations.
 
-$\boldsymbol{u}^{n+1}_P = \frac{d t}{d t_0}(\boldsymbol{u}^{n}_P-\boldsymbol{u}^{n-1}_P)+\boldsymbol{u}^{n}_P$.
+$\boldsymbol{u}^{n+1}_P = \frac{d t}{d t_0}(\boldsymbol{u}^{n}_P-\boldsymbol{u}^{n-1}_P)+\boldsymbol{u}^{n}_P$
 
 The OpenFOAM behavior is a first order extrapolation.
 # Installation
