@@ -1,0 +1,98 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2106                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     incompressibleFoam;
+
+startFrom       startTime;
+startTime       0;
+stopAt          endTime;
+endTime         50;
+deltaT          0.01;
+writeControl    adjustable;//timeStep;//adjustable;
+writeInterval   1;
+purgeWrite      0;
+writeFormat     ascii;
+writePrecision  10;
+writeCompression off;
+timeFormat      general;
+timePrecision   7;
+runTimeModifiable true;
+
+adjustTimeStep false;
+maxCo 1.0;
+maxDeltaT  0.05;
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+functions
+{
+    line_plot
+    {
+        libs ("libsampling.so");
+        type  sets;
+        writeControl            writeTime;
+        setFormat                raw;
+        interpolationScheme cellPoint;
+        fields
+        (
+            U
+        );
+        sets
+        (
+            lineX
+            {
+                type    uniform;
+                axis    x;
+                start   (0.0 0.5 0.005);
+                end     (1.0 0.5 0.005);
+                nPoints 300;
+            }
+            lineY
+            {
+                type    uniform;
+                axis    y;
+                start   (0.5 0.0 0.005);
+                end     (0.5 1.0 0.005);
+                nPoints 300;
+            }
+        );
+    };
+    residualsFluid
+    {
+        type	solverInfo;
+      	libs    ("libutilityFunctionObjects.so");
+        enabled true;
+        writeControl    timeStep;
+        writeInterval   1;
+        fields
+      	(U p);
+    }
+
+    magU
+    {
+        // Mandatory entries
+        type            mag;
+        libs            (fieldFunctionObjects);
+        field           U;
+        // Optional (inherited) entries
+        result          magU;
+        region          region0;
+        enabled         true;
+        log             true;
+        writeControl    writeTime;
+    }
+
+}
+// ************************************************************************* //
