@@ -50,7 +50,7 @@ is obtained with ocCoeff = 1.
  | _localEuler_ | LTS schemes for pseudo-transient approaches |
 
 For _steadyState_, the correct settings are :
-- in the fvSolutions file :set nOuterCorrectors and nCorrectors to 1.
+- in the fvSolutions file: set nOuterCorrectors and nCorrectors to 1.
 - _fieldsExtrapolation_ has to be set to false. 
 - for the residuals definition, the fields have to be completed with "Final" notation.
 - for the linear solvers use also the notation with "Final".
@@ -90,7 +90,6 @@ relaxationFactors
         omegaFinal 0.3;
     }
 }
-// 
 ````
 ## Rhie & Chow interpolation
 ### Consistent momentum interpolation (CMI)
