@@ -12,6 +12,11 @@ volScalarField p
     mesh
 );
 
+bool pressureCorrectionForm =
+(
+    pimple.dict().lookupOrDefault<bool>("pressureCorrectionForm", false)
+);
+
 Info<< "Creating pressure correction field\n" << endl;
 volScalarField pc
 (
@@ -21,7 +26,7 @@ volScalarField pc
         runTime.timeName(),
         mesh,
         IOobject::NO_READ,
-        IOobject::AUTO_WRITE
+        pressureCorrectionForm ? IOobject::AUTO_WRITE : IOobject::NO_WRITE
     ),
     mesh,
     dimensionedScalar("0",p.dimensions(),0.0),

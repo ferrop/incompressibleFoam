@@ -51,7 +51,6 @@ is obtained with ocCoeff = 1.
 
 For _steadyState_, the correct settings are :
 - in the fvSolutions file: set nOuterCorrectors and nCorrectors to 1.
-- _fieldsExtrapolation_ has to be set to false. 
 - for the residuals definition, the fields have to be completed with "Final" notation.
 - for the linear solvers use also the notation with "Final".
 
@@ -72,7 +71,6 @@ solvers
 PIMPLE
 {
    ...
-   fieldsExtrapolation      false;
    nOuterCorrectors          1;
    nCorrectors               1;
    ...
@@ -136,6 +134,8 @@ This option allows to start the first temporal iteration with fields (flux, velo
 This option is particulary interesting for PISO transient simulations. The activation of extrapolation will likely constrain the maximum Courant number.
 
 $\boldsymbol{u}^{n+1}_P = \frac{d t}{d t_0}(\boldsymbol{u}^{n}_P-\boldsymbol{u}^{n-1}_P)+\boldsymbol{u}^{n}_P$
+
+This option is not relevant for _steadyState_ scheme.
 
 The OpenFOAM behavior is a first order extrapolation.
 # Installation

@@ -22,16 +22,20 @@ bool pressureCorrectionForm =
 
 scalar ci(timeMethod->c(i));
 
-if (fieldsExtrapolation)
+if (timeScheme != "steadyState")
 {
-    timeMethod->extrapolateFields(i,phi,U,p);
+    if (fieldsExtrapolation)
+    {
+        timeMethod->extrapolateFields(i,phi,U,p);
+    }
+    else
+    {
+        phi = phi.oldTime() ;
+        U   = U.oldTime()   ;
+        p   = p.oldTime()   ;
+    }
 }
-else
-{
-    phi = phi.oldTime() ;
-    U   = U.oldTime()   ;
-    p   = p.oldTime()   ;
-}
+
 if(pressureCorrectionForm)
 {
     pc == 0*pc;
