@@ -14,6 +14,9 @@ Limitations :
 - If a turbulence model is used, the standard OpenFOAM schemes have to be used for the turbulence variables (ddt(k), ddt(omega) etc..). The implementation supports an (E)SDIRK scheme for ddt(U) and an OpenFOAM's standard scheme for turbulence. 
   However, this is rather unorthodox and only steadyState, localEuler, Euler, backward or CrankNicolson should be used with turbulence modeling.
 
+## Contact
+Paulin FERRO : paulin.ferro@g-met.fr
+
 # References
 P. Ferro, P. Landel, C. Landrodie, and M. Pescheux. incompressiblefoam: a new time consistent framework with bdf
 and dirk integration schemes. 2024. URL https://arxiv.org/abs/2411.08688.
