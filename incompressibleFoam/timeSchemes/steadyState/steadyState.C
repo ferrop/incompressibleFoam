@@ -3,7 +3,8 @@
 #include "steadyState.H"
 #include "addToRunTimeSelectionTable.H"
 #include "steadyStateDdtScheme.H"
-
+#include "harmonic.H"
+#include "reverseLinear.H"
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 namespace Foam
@@ -127,12 +128,29 @@ fvScalarMatrix Foam::steadyState::ddt
     return fv::steadyStateDdtScheme<scalar>(mesh_).fvmDdt(vf);
 }
 
+surfaceScalarField Foam::steadyState::r_asf
+(
+    const volScalarField& atild
+)
+{
+    return ( linearInterpolate(1.0 / atild) );
+}
+
+surfaceScalarField Foam::steadyState::phiHoverAs
+(
+    const volVectorField& convDiffH,
+    const volScalarField& atild
+)
+{
+    return ( fvc::flux(convDiffH / atild) );
+}
+
 surfaceScalarField Foam::steadyState::phiOldAndRelax
 (
     const volVectorField& U,
     const surfaceScalarField& phi,
     const surfaceScalarField& atf,
-    const surfaceScalarField& atildf,
+    const surfaceScalarField& r_asf,
     const scalar& alphaU,
     const word& fluxMethod
 )

@@ -8,8 +8,8 @@ if (ddtUEqn.hasDiag()) //Necessary check for steadyState scheme
 
 volScalarField atild( at + as*a[i][i] );
 surfaceScalarField    atf(linearInterpolate(at));
-surfaceScalarField atildf(linearInterpolate(atild));
-surfaceScalarField rAUfeq("rAUfeq", ci*alphaU / atildf);
+surfaceScalarField r_asf(timeMethod->r_asf(atild));
+surfaceScalarField rAUfeq("rAUfeq", ci * alphaU * r_asf);
 
 volVectorField convDiffH( a[i][i]*convDiffUEqn.H() );
 
@@ -18,8 +18,8 @@ volVectorField convDiffH( a[i][i]*convDiffUEqn.H() );
 surfaceScalarField phiRC
 (
      "phiRC",
-      alphaU * fvc::flux(convDiffH) / atildf
-    + alphaU * sumAijRUfj / atildf
+      alphaU * timeMethod->phiHoverAs(convDiffH,atild)
+    + alphaU * sumAijRUfj * r_asf
 );
 
 if(pressureCorrectionForm)
@@ -32,13 +32,12 @@ if(pressureCorrectionForm)
     {
         phiRC -= fvc::flux(fvc::grad(p.oldTime(),"fvc::grad(p)"))*rAUfeq;
     }
-
 }
 //Rhie & Chow interpolation 2/2 part:
 //Old time and previous iteration contribution
 surfaceScalarField phiOldAndRelax
 (
-     timeMethod->phiOldAndRelax(U,phi,atf,atildf,alphaU,consistentRhieChow)
+     timeMethod->phiOldAndRelax(U,phi,atf,r_asf,alphaU,consistentRhieChow)
 );
 
 phiRC += phiOldAndRelax;

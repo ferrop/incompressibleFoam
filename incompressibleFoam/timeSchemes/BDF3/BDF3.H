@@ -101,16 +101,14 @@ public:
             const volScalarField& vf
         );
 
-
         //- Return the old contribution of fluxes
         // for Rie Chow interpolation
-
         virtual surfaceScalarField phiOldAndRelax
         (
             const volVectorField& U,
             const surfaceScalarField& phi,
             const surfaceScalarField& atf,
-            const surfaceScalarField& atildf,
+            const surfaceScalarField& r_asf,
             const scalar& alphaU,
             const bool& consistentRhieChow
         );

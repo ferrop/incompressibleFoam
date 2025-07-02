@@ -88,10 +88,19 @@ public:
         (
             const volScalarField& vf
         );
-
+        //- Calculate interpolation of (1/as) at face
+        virtual surfaceScalarField r_asf
+        (
+            const volScalarField& atild
+        );
+        //- Calculate flux of (H/as) at face
+        virtual surfaceScalarField phiHoverAs
+        (
+            const volVectorField& convDiffH,
+            const volScalarField& atild
+        );
         //- Return the old contribution of fluxes
         // for Rie Chow interpolation
-
         virtual surfaceScalarField phiOldAndRelax
         (
             const volVectorField& U,

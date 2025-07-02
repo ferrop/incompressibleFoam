@@ -272,7 +272,7 @@ surfaceScalarField Foam::BDF3::phiOldAndRelax
     const volVectorField& U,
     const surfaceScalarField& phi,
     const surfaceScalarField& atf,
-    const surfaceScalarField& atildf,
+    const surfaceScalarField& r_asf,
     const scalar& alphaU,
     const bool& consistentRhieChow
 )
@@ -294,9 +294,9 @@ surfaceScalarField Foam::BDF3::phiOldAndRelax
     {
         return
         (
-              alphaU *atf*phi.oldTime()/atildf*(a2/a1)
-            - alphaU *atf*phi.oldTime().oldTime()/atildf*(a3/a1)
-            + alphaU *atf*phi.oldTime().oldTime().oldTime()/atildf*(a4/a1)
+              alphaU *atf*phi.oldTime()*r_asf*(a2/a1)
+            - alphaU *atf*phi.oldTime().oldTime()*r_asf*(a3/a1)
+            + alphaU *atf*phi.oldTime().oldTime().oldTime()*r_asf*(a4/a1)
             + (1.0-alphaU)*phi.prevIter()
         );
     }
@@ -304,9 +304,9 @@ surfaceScalarField Foam::BDF3::phiOldAndRelax
     {
         return
         (
-              alphaU *atf*fvc::flux(U.oldTime())/atildf*(a2/a1)
-            - alphaU *atf*fvc::flux(U.oldTime().oldTime())/atildf*(a3/a1)
-            + alphaU *atf*fvc::flux(U.oldTime().oldTime().oldTime())/atildf*(a4/a1)
+              alphaU *atf*fvc::flux(U.oldTime())*r_asf*(a2/a1)
+            - alphaU *atf*fvc::flux(U.oldTime().oldTime())*r_asf*(a3/a1)
+            + alphaU *atf*fvc::flux(U.oldTime().oldTime().oldTime())*r_asf*(a4/a1)
             + (1.0-alphaU)*phi.prevIter()
         );
     }

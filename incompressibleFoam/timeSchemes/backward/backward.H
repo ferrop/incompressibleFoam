@@ -107,7 +107,7 @@ public:
             const volVectorField& U,
             const surfaceScalarField& phi,
             const surfaceScalarField& atf,
-            const surfaceScalarField& atildf,
+            const surfaceScalarField& r_asf,
             const scalar& alphaU,
             const bool& consistentRhieChow
         );

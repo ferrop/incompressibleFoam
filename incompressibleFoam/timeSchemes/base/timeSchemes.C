@@ -188,12 +188,29 @@ fvScalarMatrix Foam::timeSchemes::ddt
     return fv::EulerDdtScheme<scalar>(mesh_).fvmDdt(vf);
 }
 
+surfaceScalarField Foam::timeSchemes::r_asf
+(
+    const volScalarField& atild
+)
+{
+    return ( 1.0/linearInterpolate(atild) );
+}
+
+surfaceScalarField Foam::timeSchemes::phiHoverAs
+(
+    const volVectorField& convDiffH,
+    const volScalarField& atild
+)
+{
+    return ( fvc::flux(convDiffH) / linearInterpolate(atild) );
+}
+
 surfaceScalarField Foam::timeSchemes::phiOldAndRelax
 (
     const volVectorField& U,
     const surfaceScalarField& phi,
     const surfaceScalarField& atf,
-    const surfaceScalarField& atildf,
+    const surfaceScalarField& r_asf,
     const scalar& alphaU,
     const bool& consistentRhieChow
 )
@@ -202,7 +219,7 @@ surfaceScalarField Foam::timeSchemes::phiOldAndRelax
     {
         return
         (
-                   alphaU *atf*phi.oldTime() / atildf
+                   alphaU *atf*phi.oldTime() * r_asf
             + (1.0-alphaU)*phi.prevIter()
         );
     }
@@ -210,7 +227,7 @@ surfaceScalarField Foam::timeSchemes::phiOldAndRelax
     {
         return
         (
-                   alphaU *atf*fvc::flux(U.oldTime()) / atildf
+                   alphaU *atf*fvc::flux(U.oldTime()) * r_asf
             + (1.0-alphaU)*phi.prevIter()
         );
     }

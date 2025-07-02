@@ -131,7 +131,7 @@ surfaceScalarField Foam::backward::phiOldAndRelax
     const volVectorField& U,
     const surfaceScalarField& phi,
     const surfaceScalarField& atf,
-    const surfaceScalarField& atildf,
+    const surfaceScalarField& r_asf,
     const scalar& alphaU,
     const bool& consistentRhieChow
 )
@@ -147,8 +147,8 @@ surfaceScalarField Foam::backward::phiOldAndRelax
     {
         return
         (
-              alphaU *atf*phi.oldTime()/atildf*coefft0/coefft
-            - alphaU *atf*phi.oldTime().oldTime()/atildf*coefft00/coefft
+              alphaU *atf*phi.oldTime()*r_asf*coefft0/coefft
+            - alphaU *atf*phi.oldTime().oldTime()*r_asf*coefft00/coefft
             + (1.0-alphaU)*phi.prevIter()
         );
     }
@@ -156,8 +156,8 @@ surfaceScalarField Foam::backward::phiOldAndRelax
     {
         return
         (
-               alphaU *atf*fvc::flux(U.oldTime())/atildf*coefft0/coefft
-             - alphaU *atf*fvc::flux(U.oldTime().oldTime())/atildf*coefft00/coefft
+               alphaU *atf*fvc::flux(U.oldTime())*r_asf*coefft0/coefft
+             - alphaU *atf*fvc::flux(U.oldTime().oldTime())*r_asf*coefft00/coefft
             + (1.0-alphaU)*phi.prevIter()
         );
     }
