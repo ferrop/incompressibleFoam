@@ -11,17 +11,17 @@ fvVectorMatrix convDiffUEqn
     fvm::div(phi, U)
   + turbulence->divDevReff(U)
   + MRF.DDt(U)
+     ==
+    fvOptions(U)
 );
+
+fvOptions.constrain(convDiffUEqn);
 
 fvVectorMatrix UEqn
 (
     ddtUEqn
   + a[i][i] * convDiffUEqn
-     ==
-    fvOptions(U)
 );
-
-fvOptions.constrain(UEqn);
 
 if (pimple.momentumPredictor())
 {
