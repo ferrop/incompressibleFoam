@@ -89,7 +89,9 @@ IOdictionary fvSchemes
         IOobject::NO_WRITE
       )
 );
-word timeScheme = fvSchemes.subDict("ddtSchemes").get<word>("ddt(U)");
+ITstream& is = fvSchemes.subDict("ddtSchemes").lookup("ddt(U)");
+word timeScheme;
+is >> timeScheme;
 
 volScalarField at
 (

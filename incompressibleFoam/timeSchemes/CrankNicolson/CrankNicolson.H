@@ -33,8 +33,6 @@ class CrankNicolson
 
         List<scalarList> a_;
 
-        scalar ocCoeff_;
-
 public:
 
     // Constructors

@@ -22,7 +22,9 @@ Foam::autoPtr<Foam::timeSchemes> Foam::timeSchemes::New
           )
     );
 
-    word timeSchemes = dict.subDict("ddtSchemes").get<word>("ddt(U)");
+    ITstream& is = dict.subDict("ddtSchemes").lookup("ddt(U)");
+    word timeSchemes;
+    is >> timeSchemes;
 
     Info<< "Time scheme : " << timeSchemes << endl;
 

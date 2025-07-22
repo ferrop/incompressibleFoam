@@ -23,13 +23,20 @@ Foam::CrankNicolson::CrankNicolson
     const fvMesh& mesh
 )
 :
-    timeSchemes(mesh),
-    ocCoeff_(optionalSubDict("ddtSchemes").get<scalar>("ocCoeff"))
+    timeSchemes(mesh)
 {
-    if (ocCoeff_ < 0 || ocCoeff_ > 1)
+    ITstream& is = optionalSubDict("ddtSchemes").lookup("ddt(U)");
+    word dummy;
+    scalar ocCoeff;
+    is >> dummy;
+    if (!is.eof())
+    {
+        is >> ocCoeff;
+    }
+    if (ocCoeff < 0 || ocCoeff > 1)
     {
         FatalIOErrorInFunction(*this)
-            << "Off-centreing coefficient = " << ocCoeff_
+            << "Off-centreing coefficient = " << ocCoeff
             << " should be >= 0 and <= 1"
             << exit(FatalIOError);
     }
@@ -39,7 +46,7 @@ Foam::CrankNicolson::CrankNicolson
     a_[1].setSize(2);
 
     a_[0][0] = 0.0 ;
-    a_[1][0] = ocCoeff_/(ocCoeff_ + 1.0); a_[1][1] = 1.0/(ocCoeff_ + 1.0);
+    a_[1][0] = ocCoeff/(ocCoeff + 1.0); a_[1][1] = 1.0/(ocCoeff + 1.0);
 }
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
@@ -59,7 +66,6 @@ bool Foam::CrankNicolson::read()
 {
     if (read())
     {
-        subDict("ddtSchemes").readEntry("ocCoeff", ocCoeff_);
         return true;
     }
 

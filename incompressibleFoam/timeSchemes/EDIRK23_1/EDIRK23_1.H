@@ -57,17 +57,8 @@ public:
         virtual List<scalarList> a();
 
         //- Return true if the RK scheme has explicit step
-        virtual bool explicitFirstStep()
-        {
-            if (mesh_.time().timeIndex() < 2)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
+        virtual bool explicitFirstStep() { return true; }
+
         virtual bool read();
 };
 

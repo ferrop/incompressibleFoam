@@ -38,13 +38,7 @@ and dirk integration schemes. 2024. URL https://arxiv.org/abs/2411.08688.
  | _DIRK33_ | 3 stages, 3d order SDIRK |
  | _DIRK43_ | 4 stages, 3d order SDIRK |
 
-With the _CrankNicolson_ scheme, the off-centering coefficient is controlled as follows :
-```cpp
-    ddt(U)          CrankNicolson;
-    ocCoeff         1.0;
-````
-If ocCoeff = 0, _CrankNicolson_ scheme is equivalent to a pure 1st order implicit Euler scheme. The full 2nd order scheme
-is obtained with ocCoeff = 1.
+With the _CrankNicolson_ scheme, the off-centering coefficient is controlled as usual.
 
 ### Steady-state schemes
  | Name | Description |
