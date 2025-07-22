@@ -24,7 +24,6 @@ ddtSchemes
     // steady-state schemes : localEuler steadyState
 
     ddt(U)          backward;
-    ocCoeff         1.0; //Off-centering coefficient only used if ddt(U) CrankNicolson;
 }
 
 gradSchemes
