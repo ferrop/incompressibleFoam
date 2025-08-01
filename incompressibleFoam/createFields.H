@@ -16,8 +16,11 @@ bool pressureCorrectionForm =
 (
     pimple.dict().lookupOrDefault<bool>("pressureCorrectionForm", false)
 );
+if (pressureCorrectionForm)
+{
+    Info<< "Creating pressure correction field\n" << endl;
+};
 
-Info<< "Creating pressure correction field\n" << endl;
 volScalarField pc
 (
     IOobject
