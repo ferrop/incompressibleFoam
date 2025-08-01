@@ -5,6 +5,7 @@ Class
 
 Description
     Third order implicit BDF3 scheme
+    For starting, the scheme uses DIRK22 for the first two time steps
 
 SourceFiles
     BDF3.C
@@ -34,14 +35,18 @@ class BDF3
         List<scalarList> a_;
 
         //- Return the current time-step
-        scalar deltaT_() const;
+        scalar deltaT_;
 
         //- Return the previous time-step
-        scalar deltaT0_() const;
+        scalar deltaT0_;
 
-        //- Return the previous time-step or GREAT if the old timestep field
-        //  wasn't available in which case Euler ddt is used
-        scalar deltaT0_(const fvMesh& mesh) const;
+        //- Return the previous previous time-step
+        scalar deltaT00_;
+
+        //- Time index used for updating time step
+        label currTimeIndex_;
+
+        void updateTimeStep();
 
 public:
 

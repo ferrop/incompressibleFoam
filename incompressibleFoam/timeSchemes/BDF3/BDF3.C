@@ -55,7 +55,10 @@ Foam::BDF3::BDF3
     a_[0][0] = gamma;
     a_[1][0] = 1.0-gamma;     a_[1][1] = gamma;
 
-
+    currTimeIndex_ = -1 ;
+    deltaT00_ = mesh.time().deltaT0Value();
+    deltaT0_  = mesh.time().deltaT0Value();
+    deltaT_   = mesh.time().deltaTValue() ;
 }
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
@@ -175,10 +178,19 @@ fvVectorMatrix Foam::BDF3::ddt
     const volVectorField& vf
 )
 {
-    scalar a1(double(11./6.));
-    scalar a2(double(18./6.));
-    scalar a3(double(9./6.));
-    scalar a4(double(2./6.));
+    updateTimeStep();
+
+    scalar r0(deltaT0_/deltaT_) ;
+    scalar r00(deltaT00_/deltaT_) ;
+    scalar a2( (scalar(1) + r0 )*(scalar(1) + r0 + r00 ) / ( r0 * (r0 + r00)) );
+    scalar a3( (scalar(1) + r0 + r00) / ((scalar(1) + r0)*(r0*r00))  );
+    scalar a4( (            r0 + r00) / ( (r00 * (r0 + r00)*(scalar(1) + r0 + r00)) )  );
+    scalar a1(  a2 - a3 + a4);
+/*
+     scalar a1(double(11./6.));
+     scalar a2(double(18./6.));
+     scalar a3(double(9./6.));
+     scalar a4(double(2./6.));*/
 
     if (mesh_.time().timeIndex() < 3)
     {
@@ -199,28 +211,15 @@ fvVectorMatrix Foam::BDF3::ddt
 
     fvVectorMatrix& fvm = tfvm.ref();
 
-    scalar rDeltaT = 1.0/deltaT_();
+    scalar rDeltaT = 1.0/mesh_.time().deltaTValue();
 
-    fvm.diag() = (a1*rDeltaT)*mesh_.V();
-
-    if (mesh_.moving())
-    {/*
-        fvm.source() = rDeltaT*
-        (
-            a2*vf.oldTime().primitiveField()*this->V().oldTime()
-          - a3*vf.oldTime().oldTime().primitiveField()*this->V().oldTime().oldTime()
-          + a4*vf.oldTime().oldTime().oldTime().primitiveField()*this->V().oldTime().oldTime().oldTime()
-        );*/
-    }
-    else
-    {
-        fvm.source() = rDeltaT*mesh_.V()*
-        (
-            a2*vf.oldTime().primitiveField()
-          - a3*vf.oldTime().oldTime().primitiveField()
-          + a4*vf.oldTime().oldTime().oldTime().primitiveField()
-        );
-    }
+    fvm.diag() = a1*rDeltaT*mesh_.V();
+    fvm.source() = rDeltaT*mesh_.V()*
+    (
+        a2*vf.oldTime().primitiveField()
+      - a3*vf.oldTime().oldTime().primitiveField()
+      + a4*vf.oldTime().oldTime().oldTime().primitiveField()
+    );
 
     return tfvm;
 }
@@ -230,10 +229,19 @@ fvScalarMatrix Foam::BDF3::ddt
     const volScalarField& vf
 )
 {
-    scalar a1(double(11./6.));
-    scalar a2(double(18./6.));
-    scalar a3(double(9./6.));
-    scalar a4(double(2./6.));
+    updateTimeStep();
+
+    scalar r0(deltaT0_/deltaT_) ;
+    scalar r00(deltaT00_/deltaT_) ;
+    scalar a2( (scalar(1) + r0 )*(scalar(1) + r0 + r00 ) / ( r0 * (r0 + r00)) );
+    scalar a3( (scalar(1) + r0 + r00) / ((scalar(1) + r0)*(r0*r00))  );
+    scalar a4( (            r0 + r00) / ( (r00 * (r0 + r00)*(scalar(1) + r0 + r00)) )  );
+    scalar a1(  a2 - a3 + a4);
+/*
+     scalar a1(double(11./6.));
+     scalar a2(double(18./6.));
+     scalar a3(double(9./6.));
+     scalar a4(double(2./6.));*/
 
     if (mesh_.time().timeIndex() < 3)
     {
@@ -254,14 +262,14 @@ fvScalarMatrix Foam::BDF3::ddt
 
     fvScalarMatrix& fvm = tfvm.ref();
 
-    scalar rDeltaT = 1.0/deltaT_();
+    scalar rDeltaT = 1.0/mesh_.time().deltaTValue();
 
-    fvm.diag() = (a1*rDeltaT)*mesh_.V();
+    fvm.diag() = a1*rDeltaT*mesh_.V();
     fvm.source() = rDeltaT*mesh_.V()*
     (
-         a2*vf.oldTime().primitiveField()
+       - a2*vf.oldTime().primitiveField()
        - a3*vf.oldTime().oldTime().primitiveField()
-       + a4*vf.oldTime().oldTime().oldTime().primitiveField()
+       - a4*vf.oldTime().oldTime().oldTime().primitiveField()
     );
 
     return tfvm;
@@ -277,10 +285,19 @@ surfaceScalarField Foam::BDF3::phiOldAndRelax
     const bool& consistentRhieChow
 )
 {
+    updateTimeStep();
+    scalar r0(deltaT0_/deltaT_) ;
+    scalar r00(deltaT00_/deltaT_) ;
+    scalar a2( (scalar(1) + r0 )*(scalar(1) + r0 + r00 ) / ( r0 * (r0 + r00)) );
+    scalar a3( (scalar(1) + r0 + r00) / ((scalar(1) + r0)*(r0*r00))  );
+    scalar a4( (            r0 + r00) / ( (r00 * (r0 + r00)*(scalar(1) + r0 + r00)) )  );
+    scalar a1(  a2 - a3 + a4);
+
+/*
     scalar a1(double(11./6.));
     scalar a2(double(18./6.));
     scalar a3(double(9./6.));
-    scalar a4(double(2./6.));
+    scalar a4(double(2./6.));*/
 
     if (mesh_.time().timeIndex() < 3)
     {
@@ -312,25 +329,14 @@ surfaceScalarField Foam::BDF3::phiOldAndRelax
     }
 }
 
-scalar BDF3::deltaT_() const
+void Foam::BDF3::updateTimeStep()
 {
-    return mesh_.time().deltaTValue();
-}
-
-scalar BDF3::deltaT0_() const
-{
-    return mesh_.time().deltaT0Value();
-}
-
-scalar BDF3::deltaT0_(const fvMesh& mesh) const
-{
-    if (mesh_.time().timeIndex() < 3)
+    if (mesh_.time().timeIndex() != currTimeIndex_)
     {
-        return GREAT;
-    }
-    else
-    {
-        return deltaT0_();
+        deltaT00_ = deltaT0_ ;
+        deltaT0_  = mesh_.time().deltaT0Value();
+        deltaT_   = mesh_.time().deltaTValue();
+        currTimeIndex_ = mesh_.time().timeIndex();
     }
 }
 
